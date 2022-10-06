@@ -1,0 +1,41 @@
+from silvair_uart_decoder.input_converters.extension_converter import ExtensionConverter
+from saleae.analyzers import HighLevelAnalyzer, AnalyzerFrame
+
+"""
+Serial Format:
+{
+  "type": "data",
+  "start_time": 0.0052,
+  "end_time": 0.0076,
+  "data": {
+    "value": 42,
+    "parity_error": False,
+    "framing_error": False,
+    "address": False, # only used in Serial MP/MDB mode.
+  }
+}
+"""
+
+
+class SilvairUARTDecoder(HighLevelAnalyzer):
+    result_types = {
+        'SilvarUARTFrame': {
+            'format': '{{data.repr}}'
+        }
+    }
+
+    def __init__(self):
+        self.converter = ExtensionConverter()
+
+    def get_capabilities(self):
+        pass
+
+    def set_settings(self, settings):
+        pass
+
+    def decode(self, data: AnalyzerFrame):
+        timestamp, frame_repr = self.converter.convert(data.start_time, data.data["data"][0])
+        if frame_repr:
+            frame_repr = frame_repr.replace("=", ":")
+            frame_repr = frame_repr.replace("`", " ")
+            return AnalyzerFrame('SilvarUARTFrame', timestamp, data.end_time, {"repr": frame_repr})

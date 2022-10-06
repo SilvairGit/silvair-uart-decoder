@@ -1,0 +1,2 @@
+include silvair_uart_decoder/LogicExtension/source_template/SilvairUARTExtension.py_template
+include silvair_uart_decoder/LogicExtension/extension.json
