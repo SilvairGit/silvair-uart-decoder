@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="silvair-uart-decoder",
-    version="0.1.0",
+    version="0.1.1",
     packages=find_packages(),
     license='MIT',
     entry_points={
@@ -20,6 +20,7 @@ setup(
     author_email="support@silvair.com",
     description="Tool for decoding Silvair UART protocol.",
     long_description=long_description,
+    long_description_content_type='text/markdown',
     install_requires=["construct", "crcmod"],
     tests_require=["pytest"],
 )
