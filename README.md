@@ -1,8 +1,8 @@
-<h1 align="center">UART Decoder</h1>
+<h1 align="center">Silvair UART Decoder</h1>
 
 # About The Repository
 
-UART Decoder is a python library for parsing Silvair UART protocol messages. It also includes two applications that 
+Silvair UART Decoder is a python library for parsing Silvair UART protocol messages. It also includes two applications that 
 could be used for message parsing:
 * HLA Extension for `Saleae Logic 2`.
 * Python script for parsing .csv file with serial values for `Saleae Logic 1`.
@@ -22,8 +22,8 @@ Tested on Ubuntu 20.04 with Python 3.8 and Windows 11 with Python 3.10
 
 
 1. Make sure, you have `Python` with at least 3.6 version and installed pip.
-2. Install UART-Decoder using pip: `pip install UART-decoder`. WARNING:  If `The script is installed in directory, which is not PATH` will appear during installation, add this directory to PATH environment variable.
-3. In terminal, call `generate_uart_decoder_extension <PATH>` executable, where `PATH` is directory when you want to install HLA Extension. Example: `generate_uart_decoder_extension .` to install in current directory. `SilvairUARTDecoder` folder should be generated under passed path.
+2. Install UART-Decoder using pip: `pip install silvair-uart-decoder`. WARNING:  If `The script is installed in directory, which is not PATH` will appear during installation, add this directory to PATH environment variable.
+3. In terminal, call `generate_uart_decoder_extension <PATH>` executable, where `PATH` is directory when you want to install HLA Extension. Example: `generate_uart_decoder_extension .` to install in current directory. `SilvairUARTDecoder` folder should be generated in passed path.
 4. Open Logic 2, click "Extensions" icon on right side. 
 5. In upper-right corner should be three dots with "Load existing extensions" option. Click it.
 6. Load `extension.json` located in previously generated `SilvairUARTDecoder` directory.
@@ -40,10 +40,10 @@ Tested on Ubuntu 20.04 with Python 3.8 and Windows 11 with Python 3.10
 ## How to start with Python script?
 
 1. Make sure, you have `Python` with at least 3.6 version and installed pip.
-2. Install UART-Decoder using pip: `pip install UART-decoder`. WARNING:  If `The script is installed in directory, which is not PATH` will appear during installation, add this directory to PATH environment variable.
+2. Install UART-Decoder using pip: `pip install silvair-uart-decoder`. WARNING:  If `The script is installed in directory, which is not PATH` will appear during installation, add this directory to PATH environment variable.
 3. Run application using command: 
 ```
-python -m silvair_uart_decoder.main 
+silvair-uart-decoder
 ```
 Pass `-h` parameter to show help with instruction how to use script.
 
@@ -64,7 +64,7 @@ Currently two input format decoders are available:
 
 Parse logs stored in `example.csv` from Logic 1, and save it to `example.txt`. `example.csv` is in saleae Logic 1 format:
 ```
-python -m silvair_uart_decoder.main -f saleae -O example.txt example.csv 
+silvair-uart-decoder -f saleae -O example.txt example.csv 
 ```
 
 ### How to export data from Logic 1?

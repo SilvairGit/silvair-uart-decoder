@@ -5,12 +5,12 @@ with open("README.md", "r") as f:
 
 setup(
     name="silvair-uart-decoder",
-    version="0.1.2",
+    version="0.1.3",
     packages=find_packages(),
     license='MIT',
     entry_points={
         "console_scripts": [
-            "uart-decoder=silvair_uart_decoder.main:main",
+            "silvair-uart-decoder=silvair_uart_decoder.main:main",
             "generate_uart_decoder_extension=silvair_uart_decoder.main:generate_saleae_extension"
         ]
     },
