@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="silvair-uart-decoder",
-    version="0.1.1",
+    version="0.1.2",
     packages=find_packages(),
     license='MIT',
     entry_points={

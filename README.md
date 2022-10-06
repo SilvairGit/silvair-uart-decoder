@@ -33,8 +33,8 @@ Tested on Ubuntu 20.04 with Python 3.8 and Windows 11 with Python 3.10
 
 ### Screenshots
 
-![Alt text](readme_photos/Screenshot_20211001_121335.png?raw=true)
-![Alt text](readme_photos/Screenshot_20211001_121452.png?raw=true)
+![](https://github.com/SilvairGit/silvair-uart-decoder/blob/master/readme_photos/Screenshot_20211001_121335.png?raw=true)
+![](https://github.com/SilvairGit/silvair-uart-decoder/blob/master/readme_photos/Screenshot_20211001_121452.png?raw=true)
 
 
 ## How to start with Python script?
@@ -76,4 +76,4 @@ python -m silvair_uart_decoder.main -f saleae -O example.txt example.csv
 
 ### Screenshots
 
-![Alt text](readme_photos/Screenshot_20211001_122800.png?raw=true)
+![](https://github.com/SilvairGit/silvair-uart-decoder/blob/master/readme_photos/Screenshot_20211001_122800.png?raw=true)
