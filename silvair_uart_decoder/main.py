@@ -33,6 +33,7 @@ def generate_saleae_extension(argv=None):
 
         outfile.write("\n")
         outfile.write(saved_file)
+    print("Success!")
 
 
 def main(argv=None):
