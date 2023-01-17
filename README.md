@@ -26,14 +26,15 @@ Make sure, you have `Python` with at least 3.6 version and installed pip.
 #### Using Command line:
 
 1. Install UART-Decoder using pip: `pip install silvair-uart-decoder`. WARNING:  If `The script is installed in directory, which is not PATH` will appear during installation, add this directory to PATH environment variable.
-2. In terminal, call `generate_uart_decoder_extension <PATH>` executable, where `<PATH>` is directory when you want to install HLA Extension. Example: `generate_uart_decoder_extension .` to install in current directory. `SilvairUARTDecoder` folder should be generated in passed path.
+2. In terminal, call `generate_uart_decoder_extension <PATH>` executable, where `<PATH>` is directory when you want to install HLA Extension. Example: `generate_uart_decoder_extension .` to install in current directory. `SilvairUARTDecoder` directory should be generated in passed path.
 
 #### Using 'install' file
 
-1. Run script according to system are you using:
+1. Download Repository
+2. Run script according to system are you using:
     - Windows: `install_windows.bat`
     - Linux: `install_linux.bat`
-    - Mac: `install_mac.sh`
+3. `SilvairUARTDecoder` directory should be generated in repository path.
 
 ### Running Extension in Logic 2
 
