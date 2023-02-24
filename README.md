@@ -18,18 +18,32 @@ All used packages can be obtained from setup.py file.
 
 ## How to start with HLA Extension?
 
-Tested on Ubuntu 20.04 with Python 3.8 and Windows 11 with Python 3.10
+Tested on Ubuntu 20.04 with Python 3.8 and Windows 11 with Python 3.10. 
+Make sure, you have `Python` with at least 3.6 version and installed pip.
 
+### Installation:
 
-1. Make sure, you have `Python` with at least 3.6 version and installed pip.
-2. Install UART-Decoder using pip: `pip install silvair-uart-decoder`. WARNING:  If `The script is installed in directory, which is not PATH` will appear during installation, add this directory to PATH environment variable.
-3. In terminal, call `generate_uart_decoder_extension <PATH>` executable, where `PATH` is directory when you want to install HLA Extension. Example: `generate_uart_decoder_extension .` to install in current directory. `SilvairUARTDecoder` folder should be generated in passed path.
-4. Open Logic 2, click "Extensions" icon on right side. 
-5. In upper-right corner should be three dots with "Load existing extensions" option. Click it.
-6. Load `extension.json` located in previously generated `SilvairUARTDecoder` directory.
-7. Click "Analyzers" icon on right side.
-8. Load `Async Serial` analyzer for appropriate channel, and then load `Silvair UART Decoder`.
-9. Hooray, Silvair UART messages should be described above waveforms! :)
+#### Using Command line:
+
+1. Install UART-Decoder using pip: `pip install silvair-uart-decoder`. WARNING:  If `The script is installed in directory, which is not PATH` will appear during installation, add this directory to PATH environment variable.
+2. In terminal, call `generate_uart_decoder_extension <PATH>` executable, where `<PATH>` is directory when you want to install HLA Extension. Example: `generate_uart_decoder_extension .` to install in current directory. `SilvairUARTDecoder` directory should be generated in passed path.
+
+#### Using 'install' file
+
+1. Download Repository
+2. Run script according to system are you using:
+    - Windows: `install_windows.bat`
+    - Linux: `install_linux.bat`
+3. `SilvairUARTDecoder` directory should be generated in repository path.
+
+### Running Extension in Logic 2
+
+1. Open Logic 2, click "Extensions" icon on right side. 
+2. In upper-right corner should be three dots with "Load existing extensions" option. Click it.
+3. Load `extension.json` located in previously generated `SilvairUARTDecoder` directory.
+4. Click "Analyzers" icon on right side.
+5. Load `Async Serial` analyzer for appropriate channel, and then load `Silvair UART Decoder`.
+6. Hooray, Silvair UART messages should be described above waveforms! :)
 
 ### Screenshots
 

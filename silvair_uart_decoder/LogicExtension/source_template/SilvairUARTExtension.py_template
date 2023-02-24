@@ -19,7 +19,7 @@ Serial Format:
 
 class SilvairUARTDecoder(HighLevelAnalyzer):
     result_types = {
-        'SilvarUARTFrame': {
+        'SilvairUARTFrame': {
             'format': '{{data.repr}}'
         }
     }
@@ -38,4 +38,4 @@ class SilvairUARTDecoder(HighLevelAnalyzer):
         if frame_repr:
             frame_repr = frame_repr.replace("=", ":")
             frame_repr = frame_repr.replace("`", " ")
-            return AnalyzerFrame('SilvarUARTFrame', timestamp, data.end_time, {"repr": frame_repr})
+            return AnalyzerFrame('SilvairUARTFrame', timestamp, data.end_time, {"repr": frame_repr})
