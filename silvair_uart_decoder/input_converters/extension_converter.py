@@ -22,10 +22,17 @@ class ExtensionConverter:
         if validator.validate(frame) != ValidationResult.VALID:
             return 0, ""
 
-        command = CommandCode(frame.command)
-        output_line = "{:30}".format(command.name)
+        try:
+            command = CommandCode(frame.command)
+            output_line = "{:30}".format(command.name)
+        except ValueError:
+            output_line = "{:30}".format("Invalid command")
+            return frame.timestamp, output_line
 
         if frame.data:
-            output_line += command_param_parser.parse(command, frame.data)
+            try:
+                output_line += command_param_parser.parse(command, frame.data)
+            except ValueError:
+                output_line += "Invalid data"
 
         return frame.timestamp, output_line
