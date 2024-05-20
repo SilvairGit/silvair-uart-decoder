@@ -4,7 +4,8 @@ from .formatters import enum_model_name_fmter, enum_opcode_name_fmter, enum_atte
     enum_dfu_status_fmter, enum_dfu_state_fmter, enum_error_id_fmter, list_fmter, struct_fmter, data_hexstr_fmter, \
     data_ascii_fmter, uuid_fmter, uint8_hex_fmter, uint16_hex_fmter, uint32_hex_fmter, uint8_hex_and_int_fmter, \
     uint16_hex_and_int_fmter, uint32_hex_and_int_fmter, rtc_date_fmter, mesh_date_fmter, \
-    enum_meshmesreq1_opcode_name_fmter, enum_el_state_fmter, enum_property_id_fmter, enum_test_status_fmter
+    enum_meshmesreq1_opcode_name_fmter, enum_el_state_fmter, enum_property_id_fmter, enum_test_status_fmter, \
+    enum_setting_name_fmter, enum_access_name_fmter
 
 
 class ValueObj:
@@ -67,10 +68,24 @@ class ModelIdAdapter(Adapter):
     def _decode(self, obj, context, path):
         return ValueObj(obj, enum_model_name_fmter)
 
+
+class AccessAdapter(Adapter):
+
+    def _decode(self, obj, context, path):
+        return ValueObj(obj, enum_access_name_fmter)
+
+
+class SettingIdAdapter(Adapter):
+
+    def _decode(self, obj, context, path):
+        return ValueObj(obj, enum_setting_name_fmter)
+
+
 class ELStateAdapter(Adapter):
 
     def _decode(self, obj, context, path):
         return ValueObj(obj, enum_el_state_fmter)
+
 
 class ELPropertyIDAdapter(Adapter):
 

@@ -5,7 +5,7 @@ import uuid
 from datetime import timedelta, datetime, timezone
 
 from .common import AttentionState, DeviceState, ErrorId, DFUStatus, DFUState, ModelName, OpcodeName, ELState, \
-    PropertyID, TestStatus
+    PropertyID, TestStatus, SettingName, AccessName
 
 UINT8_FMT = "0x{:02x}"
 UINT16_FMT = "0x{:04x}"
@@ -47,6 +47,14 @@ def enum_fmter(value, fmt="{}", enum_base=None):
 
 def enum_model_name_fmter(value):
     return enum_fmter(value, UINT16_FMT, ModelName)
+
+
+def enum_access_name_fmter(value):
+    return enum_fmter(value, UINT8_FMT, AccessName)
+
+
+def enum_setting_name_fmter(value):
+    return enum_fmter(value, UINT16_FMT, SettingName)
 
 
 def enum_opcode_name_fmter(value):
@@ -91,6 +99,7 @@ def enum_property_id_fmter(value):
 
 def enum_test_status_fmter(value):
     return enum_fmter(value, UINT8_FMT, TestStatus)
+
 
 def list_fmter(value):
     return "[{}]".format(", ".join([str(v) for v in value]))

@@ -46,6 +46,8 @@ class CommandCode(enum.IntEnum):
     TimeSourceGetResponse = 0x2C
     TimeGetRequest = 0x2D
     TimeGetResponse = 0x2E
+    SensorSettingUpdateRequest = 0x2F
+    SensorSettingUpdateResponse = 0x30
     DfuInitRequest = 0x80
     DfuInitResponse = 0x81
     DfuStatusRequest = 0x82
@@ -118,6 +120,16 @@ class PropertyID(enum.IntEnum):
 class TestStatus(enum.IntEnum):
     Test_Finished = 0x00
     Test_Result_Unknown = 0x07
+
+
+class AccessName(enum.IntEnum):
+    Read_Only = 0x01
+    Read_Write = 0x03
+
+
+class SettingName(enum.IntEnum):
+    Sensor_Sensitivity = 0xFF90
+    Sensor_Sensitivity_Steps = 0xFF91
 
 
 class ModelName(enum.IntEnum):

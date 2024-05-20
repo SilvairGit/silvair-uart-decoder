@@ -2,7 +2,7 @@
   "name": "Silvair UART Decoder",
   "apiVersion": "1.0.0",
   "author": "Silvair",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "extensions": {
     "Silvair UART Decoder": {
