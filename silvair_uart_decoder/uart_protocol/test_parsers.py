@@ -3,7 +3,7 @@ import unittest
 from .parsers import ModelId, ModelIds, Attention, Data, DFUPageCreateReq, DeviceState, Error, DFUStatus, \
     DFUState, UUID, Version, HealthFaultParams, HealthTestParams, MeshMessageReq, MeshMessageResp, SensorUpdateReq, \
     DFUInitReq, DFUStatusResp, HealthServerParams, SensorParams, SensorServerParams, ModelParams, TimeGetResp, \
-    TimeSourceGetResp, MeshMessageReq1
+    TimeSourceGetResp, MeshMessageReq1, SensorSettingValue, SenSetUpdateReq
 
 
 class ParsersTest(unittest.TestCase):
@@ -139,6 +139,7 @@ class ParsersTest(unittest.TestCase):
         data = bytes([0x01, 0x4d, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x40])
 
         result = SensorServerParams.parse(data)
+        self.assertEqual(0, result.value.setting_count)
         self.assertEqual(1, result.value.sensor_count)
         self.assertEqual(0x004d, result.value.sensors.value[0].value.property_id.value)
         self.assertEqual(0x0000, result.value.sensors.value[0].value.positive_tolerance.value)
@@ -146,6 +147,78 @@ class ParsersTest(unittest.TestCase):
         self.assertEqual(0x01, result.value.sensors.value[0].value.sampling_function.value)
         self.assertEqual(0x00, result.value.sensors.value[0].value.measurement_period.value)
         self.assertEqual(0x40, result.value.sensors.value[0].value.update_interval.value)
+
+    def test_should_parse_CreateInstancesRequestWithSensorSettings(self):
+        data = bytes([0x00, 0x11, 0x21, 0x4D, 0x00, 0x00, 0x00, 0x00,
+                      0x00, 0x01, 0x00, 0x2F, 0x4D, 0x00, 0x03, 0x90,
+                      0xFF, 0xC8, 0x4D, 0x00, 0x01, 0x91, 0xFF, 0xC8,
+                      0x00, 0x11, 0x01, 0x4E, 0x00, 0x00, 0x00, 0x00,
+                      0x00, 0x01, 0x00, 0x2F, 0x00, 0x11, 0x02, 0x57,
+                      0x00, 0x14, 0x00, 0x14, 0x00, 0x03, 0x00, 0x40,
+                      0x6A, 0x00, 0x28, 0x00, 0x28, 0x00, 0x03, 0x00,
+                      0x40, 0x00, 0x11, 0x02, 0x59, 0x00, 0x14, 0x00,
+                      0x14, 0x00, 0x03, 0x00, 0x40, 0x52, 0x00, 0x28,
+                      0x00, 0x28, 0x00, 0x03, 0x00, 0x40])
+        result = ModelParams.parse(data)
+        self.assertEqual(0x1100, result.value[0].value.model_id.value)
+        self.assertEqual(2, result.value[0].value.params.value.setting_count)
+        self.assertEqual(1, result.value[0].value.params.value.sensor_count)
+        self.assertEqual(0x004d, result.value[0].value.params.value.sensors.value[0].value.property_id.value)
+        self.assertEqual(0x0000, result.value[0].value.params.value.sensors.value[0].value.positive_tolerance.value)
+        self.assertEqual(0x0000, result.value[0].value.params.value.sensors.value[0].value.negative_tolerance.value)
+        self.assertEqual(0x01, result.value[0].value.params.value.sensors.value[0].value.sampling_function.value)
+        self.assertEqual(0x00, result.value[0].value.params.value.sensors.value[0].value.measurement_period.value)
+        self.assertEqual(0x2F, result.value[0].value.params.value.sensors.value[0].value.update_interval.value)
+        self.assertEqual(0x004d, result.value[0].value.params.value.settings.value[0].value.model_id)
+        self.assertEqual(0x03, result.value[0].value.params.value.settings.value[0].value.access)
+        self.assertEqual(0xff90, result.value[0].value.params.value.settings.value[0].value.setting_id)
+        self.assertEqual(200, result.value[0].value.params.value.settings.value[0].value.setting_value)
+        self.assertEqual(0x004d, result.value[0].value.params.value.settings.value[1].value.model_id)
+        self.assertEqual(0x01, result.value[0].value.params.value.settings.value[1].value.access)
+        self.assertEqual(0xff91, result.value[0].value.params.value.settings.value[1].value.setting_id)
+        self.assertEqual(200, result.value[0].value.params.value.settings.value[1].value.setting_value)
+
+        self.assertEqual(0x1100, result.value[1].value.model_id.value)
+        self.assertEqual(0, result.value[1].value.params.value.setting_count)
+        self.assertEqual(1, result.value[1].value.params.value.sensor_count)
+        self.assertEqual(0x004e, result.value[1].value.params.value.sensors.value[0].value.property_id.value)
+        self.assertEqual(0x0000, result.value[1].value.params.value.sensors.value[0].value.positive_tolerance.value)
+        self.assertEqual(0x0000, result.value[1].value.params.value.sensors.value[0].value.negative_tolerance.value)
+        self.assertEqual(0x01, result.value[1].value.params.value.sensors.value[0].value.sampling_function.value)
+        self.assertEqual(0x00, result.value[1].value.params.value.sensors.value[0].value.measurement_period.value)
+        self.assertEqual(0x2F, result.value[1].value.params.value.sensors.value[0].value.update_interval.value)
+
+        self.assertEqual(0x1100, result.value[2].value.model_id.value)
+        self.assertEqual(0, result.value[2].value.params.value.setting_count)
+        self.assertEqual(2, result.value[2].value.params.value.sensor_count)
+        self.assertEqual(0x0057, result.value[2].value.params.value.sensors.value[0].value.property_id.value)
+        self.assertEqual(0x0014, result.value[2].value.params.value.sensors.value[0].value.positive_tolerance.value)
+        self.assertEqual(0x0014, result.value[2].value.params.value.sensors.value[0].value.negative_tolerance.value)
+        self.assertEqual(0x03, result.value[2].value.params.value.sensors.value[0].value.sampling_function.value)
+        self.assertEqual(0x00, result.value[2].value.params.value.sensors.value[0].value.measurement_period.value)
+        self.assertEqual(0x40, result.value[2].value.params.value.sensors.value[0].value.update_interval.value)
+        self.assertEqual(0x006a, result.value[2].value.params.value.sensors.value[1].value.property_id.value)
+        self.assertEqual(0x0028, result.value[2].value.params.value.sensors.value[1].value.positive_tolerance.value)
+        self.assertEqual(0x0028, result.value[2].value.params.value.sensors.value[1].value.negative_tolerance.value)
+        self.assertEqual(0x03, result.value[2].value.params.value.sensors.value[1].value.sampling_function.value)
+        self.assertEqual(0x00, result.value[2].value.params.value.sensors.value[1].value.measurement_period.value)
+        self.assertEqual(0x40, result.value[2].value.params.value.sensors.value[1].value.update_interval.value)
+
+        self.assertEqual(0x1100, result.value[3].value.model_id.value)
+        self.assertEqual(0, result.value[3].value.params.value.setting_count)
+        self.assertEqual(2, result.value[3].value.params.value.sensor_count)
+        self.assertEqual(0x0059, result.value[3].value.params.value.sensors.value[0].value.property_id.value)
+        self.assertEqual(0x0014, result.value[3].value.params.value.sensors.value[0].value.positive_tolerance.value)
+        self.assertEqual(0x0014, result.value[3].value.params.value.sensors.value[0].value.negative_tolerance.value)
+        self.assertEqual(0x03, result.value[3].value.params.value.sensors.value[0].value.sampling_function.value)
+        self.assertEqual(0x00, result.value[3].value.params.value.sensors.value[0].value.measurement_period.value)
+        self.assertEqual(0x40, result.value[3].value.params.value.sensors.value[0].value.update_interval.value)
+        self.assertEqual(0x0052, result.value[3].value.params.value.sensors.value[1].value.property_id.value)
+        self.assertEqual(0x0028, result.value[3].value.params.value.sensors.value[1].value.positive_tolerance.value)
+        self.assertEqual(0x0028, result.value[3].value.params.value.sensors.value[1].value.negative_tolerance.value)
+        self.assertEqual(0x03, result.value[3].value.params.value.sensors.value[1].value.sampling_function.value)
+        self.assertEqual(0x00, result.value[3].value.params.value.sensors.value[1].value.measurement_period.value)
+        self.assertEqual(0x40, result.value[3].value.params.value.sensors.value[1].value.update_interval.value)
 
     def test_should_parse_ModelParams(self):
         data = bytes([0x0f, 0x13, 0x00, 0x11, 0x01, 0x4d, 0x00, 0x00,
@@ -156,6 +229,8 @@ class ParsersTest(unittest.TestCase):
         self.assertEqual(0x130f, result.value[0].value.model_id.value)
         self.assertEqual(None, result.value[0].value.params)
         self.assertEqual(0x1100, result.value[1].value.model_id.value)
+        self.assertEqual(0, result.value[1].value.params.value.setting_count)
+        self.assertEqual(1, result.value[1].value.params.value.sensor_count)
         self.assertEqual(0x004d, result.value[1].value.params.value.sensors.value[0].value.property_id.value)
         self.assertEqual(0x0000, result.value[1].value.params.value.sensors.value[0].value.positive_tolerance.value)
         self.assertEqual(0x0000, result.value[1].value.params.value.sensors.value[0].value.negative_tolerance.value)
@@ -277,7 +352,6 @@ class ParsersTest(unittest.TestCase):
         self.assertEqual(0xFF80, result.value.mesh_cmd.value.property_id)
         self.assertEqual(0x1234, result.value.mesh_cmd.value.property_value)
 
-
     def test_should_parse_EL_message_ELOperationalTimeStatus(self):
         data = bytes([0x01, 0x02, 0xEA, 0x36, 0x01, 0x0D, 0x67, 0x45, 0x23, 0x01, 0xEF, 0xCD, 0xAB, 0x89])
         result = MeshMessageReq1.parse(data)
@@ -346,4 +420,26 @@ class ParsersTest(unittest.TestCase):
         self.assertEqual(True, result.value.mesh_cmd.value.result.Battery_duration_fault)
         self.assertEqual(0x1234, result.value.mesh_cmd.value.test_length)
 
+    def test_should_parse_SensorSettingValue(self):
+        data = bytes([0x4D, 0x00, 0x03, 0x90, 0xFF, 0xC8])
+        result = SensorSettingValue.parse(data)
+        self.assertEqual(0x004d, result.value.model_id)
+        self.assertEqual(0x03, result.value.access)
+        self.assertEqual(0xff90, result.value.setting_id)
+        self.assertEqual(200, result.value.setting_value)
 
+    def test_should_parse_SensorSettingValue2(self):
+        data = bytes([0x4D, 0x00, 0x01, 0x91, 0xFF, 0x0A])
+        result = SensorSettingValue.parse(data)
+        self.assertEqual(0x004d, result.value.model_id)
+        self.assertEqual(0x01, result.value.access)
+        self.assertEqual(0xff91, result.value.setting_id)
+        self.assertEqual(10, result.value.setting_value)
+
+    def test_should_parse_SensorSettingUpdateRequest(self):
+        data = bytes([0x01, 0x4D, 0x00, 0x90, 0xFF, 0xC8])
+        result = SenSetUpdateReq.parse(data)
+        self.assertEqual(1, result.value.instance_index)
+        self.assertEqual(0x004D, result.value.property_id)
+        self.assertEqual(0xff90, result.value.setting_id)
+        self.assertEqual(200, result.value.setting_value)

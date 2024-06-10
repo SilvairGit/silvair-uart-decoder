@@ -1,12 +1,12 @@
-from construct import Struct, Int8ul, Int16ul, Int32ul, Bytes, this, GreedyRange, GreedyBytes, Array, Switch, Int24ul, \
-    IfThenElse, BytesInteger, Adapter, Container, StopIf, Union, VarInt, BitStruct, Padding, Flag
+from construct import Struct, Int8ul, Int16ul, Int32ul, Bytes, this, GreedyRange, GreedyBytes, Array, \
+    Switch, Int24ul, BytesInteger, Adapter, Container, StopIf, BitStruct, Padding, Flag, Nibble, Bitwise, Bytewise
 
-from .common import CommandCode, ModelName, OpcodeName
+from .common import CommandCode, ModelName, OpcodeName, SettingName
 from .adapters import ValueObj, AttentionAdapter, DeviceStateAdapter, DFUStatusAdapter, DFUStateAdapter, \
     ErrorAdapter, ModelIdAdapter, ListAdapter, StructAdapter, DataHexStrAdapter, DataAsciiAdapter, UUIDAdapter, \
     Uint8HexAdapter, Uint16HexAdapter, Uint32HexAndIntAdapter, PropertyIdAdapter, CompanyIdAdapter, OpcodeAdapter, \
     MeshDateAdapter, RTCDateAdapter, MeshMesReq1OpcodeAdapter, ELStateAdapter, ELPropertyIDAdapter, \
-    ELTTestStatusAdapter
+    ELTTestStatusAdapter, SettingIdAdapter, AccessAdapter
 
 
 class MeshOpcodeAdapter(Adapter):
@@ -31,6 +31,10 @@ class MeshOpcodeAdapter(Adapter):
 
 ModelId = ModelIdAdapter(Int16ul)
 
+SettingId = SettingIdAdapter(Int16ul)
+
+Access = AccessAdapter(Int8ul)
+
 ModelIds = ListAdapter(GreedyRange(ModelId))
 
 SensorParams = StructAdapter(Struct(
@@ -42,10 +46,26 @@ SensorParams = StructAdapter(Struct(
     "update_interval" / Uint8HexAdapter(Int8ul),
 ))
 
-SensorServerParams = StructAdapter(Struct(
-    "sensor_count" / Int8ul,
-    "sensors" / ListAdapter(Array(this.sensor_count, SensorParams)),
+SensorSettingValue = StructAdapter(Struct(
+    "model_id" / ModelId,
+    "access" / Access,
+    "setting_id" / SettingId,
+    "setting_value" / Switch(
+        this.setting_id,
+        {
+            ValueObj(SettingName.Sensor_Sensitivity.value): Int8ul,
+            ValueObj(SettingName.Sensor_Sensitivity_Steps.value): Int8ul,
+        },
+        default=None,
+    )
 ))
+
+SensorServerParams = StructAdapter(Bitwise(Struct(
+    "setting_count" / Nibble,
+    "sensor_count" / Nibble,
+    "sensors" / Bytewise(ListAdapter(Array(this.sensor_count, SensorParams))),
+    "settings" / Bytewise(ListAdapter(Array(this.setting_count, SensorSettingValue))),
+)))
 
 TimeServerParams = StructAdapter(Struct(
     "flags" / Int8ul,
@@ -192,15 +212,33 @@ TimeSourceSetReq = StructAdapter(Struct(
     "rtc_date" / RTCDateFormat
 ))
 
-TimeSourceSetResp = StructAdapter(Struct(
+TimeSourceGetResp = TimeSourceSetReq
+
+InstanceIndexContainer = StructAdapter(Struct(
     "instance_index" / Int8ul
 ))
 
-TimeSourceGetReq = TimeSourceSetResp
+TimeSourceSetResp = InstanceIndexContainer
 
-TimeSourceGetResp = TimeSourceSetReq
+TimeSourceGetReq = InstanceIndexContainer
 
-TimeGetReq = TimeSourceSetResp
+TimeGetReq = InstanceIndexContainer
+
+SenSetUpdateReq = StructAdapter(Struct(
+    "instance_index" / Int8ul,
+    "property_id" / PropertyIdAdapter(Int16ul),
+    "setting_id" / SettingId,
+    "setting_value" / Switch(
+        this.setting_id,
+        {
+            ValueObj(SettingName.Sensor_Sensitivity.value): Int8ul,
+            ValueObj(SettingName.Sensor_Sensitivity_Steps.value): Int8ul,
+        },
+        default=None,
+    )
+))
+
+SenSetUpdateResp = InstanceIndexContainer
 
 MeshTimeFormat = MeshDateAdapter(Struct(
     "tai_seconds" / BytesInteger(5, swapped=True),
@@ -310,6 +348,8 @@ class CommandParamParser:
         CommandCode.TimeSourceGetResponse: TimeSourceGetResp.parse,
         CommandCode.TimeGetRequest: TimeGetReq.parse,
         CommandCode.TimeGetResponse: TimeGetResp.parse,
+        CommandCode.SensorSettingUpdateRequest: SenSetUpdateReq.parse,
+        CommandCode.SensorSettingUpdateResponse: SenSetUpdateResp.parse,
     }
 
     def parse(self, cmd_code, data):
